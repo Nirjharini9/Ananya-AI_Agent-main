@@ -1,0 +1,72 @@
+[
+  {
+    "id": "jsudbn8uy",
+    "category": "identity",
+    "text": "The user's name is Abhishek and he prefers to be addressed that way.",
+    "createdAt": "2026-09-11T14:34:40.063Z",
+    "updatedAt": "2026-09-11T14:34:40.063Z"
+  },
+  {
+    "id": "7w4nfm46m",
+    "category": "preference",
+    "text": "The user prefers to speak in Hindi.",
+    "createdAt": "2026-09-11T14:34:40.078Z",
+    "updatedAt": "2026-09-11T14:34:40.078Z"
+  },
+  {
+    "id": "v5oa7ehdu",
+    "category": "preference",
+    "text": "The user prefers to speak in Hindi.",
+    "createdAt": "2026-09-15T05:22:03.984Z",
+    "updatedAt": "2026-09-15T05:22:03.984Z"
+  },
+  {
+    "id": "ni1uyc06i",
+    "category": "identity",
+    "text": "The user prefers to be called Nirjharini.",
+    "createdAt": "2026-09-16T20:10:29.662Z",
+    "updatedAt": "2026-09-16T20:10:29.662Z"
+  },
+  {
+    "id": "izq1ibrx9",
+    "category": "identity",
+    "text": "The user prefers to be called Nirjharini, not Abhishek.",
+    "createdAt": "2026-09-16T20:10:42.982Z",
+    "updatedAt": "2026-09-16T20:10:42.982Z"
+  },
+  {
+    "id": "hnktbd9qk",
+    "category": "identity",
+    "text": "The user strongly prefers to be called Nirjharini and is very upset when called Abhishek.",
+    "createdAt": "2026-09-16T20:11:06.176Z",
+    "updatedAt": "2026-09-16T20:11:06.176Z"
+  },
+  {
+    "id": "84bj8u90g",
+    "category": "relationship",
+    "text": "Nirjharini wants Abhishek to be known as someone they consider a crazy person who they have romantic feelings for, and wants Ananya to understand this specific context.",
+    "createdAt": "2026-09-16T20:12:02.101Z",
+    "updatedAt": "2026-09-16T20:12:02.101Z"
+  },
+  {
+    "id": "o6rxti55t",
+    "category": "identity",
+    "text": "The user prefers and insists on being called only by the name Nirjharini. They become extremely angry if called Abhishek.",
+    "createdAt": "2026-09-17T18:36:14.046Z",
+    "updatedAt": "2026-09-17T18:36:14.046Z"
+  },
+  {
+    "id": "p9vgcixr0",
+    "category": "identity",
+    "text": "The user prefers to be called Nirjharini but also mentioned that they consider Abhishek to be a crazy person they have romantic feelings for.",
+    "createdAt": "2026-09-21T19:17:34.178Z",
+    "updatedAt": "2026-09-21T19:17:34.178Z"
+  },
+  {
+    "id": "jxlis01rh",
+    "category": "emotional",
+    "text": "The user was extremely angry and distressed when I previously called them Abhishek. They are very insistent that I only use the name Nirjharini.",
+    "createdAt": "2026-09-21T20:26:36.951Z",
+    "updatedAt": "2026-09-21T20:26:36.951Z"
+  }
+]

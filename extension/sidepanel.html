@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ananya Agent — Side Panel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0a0a1a;
+      color: #e0e0f0;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 16px;
+      color: #E5E7EB;
+      margin-bottom: 12px;
+    }
+    .section {
+      background: rgba(25, 25, 55, 0.8);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .section h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #8888aa;
+      margin-bottom: 8px;
+    }
+    .log-entry {
+      font-size: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.05);
+      font-family: 'Cascadia Code', monospace;
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-action { color: #818cf8; }
+    .log-pii { color: #ef4444; }
+    .log-safe { color: #22c55e; }
+    .log-info { color: #8888aa; }
+
+    #redactionPreview {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      margin-top: 8px;
+    }
+    .empty { font-size: 12px; color: #555; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>🛡️ Ananya Vision Agent</h1>
+
+  <div class="section">
+    <h3>📸 Redaction Preview</h3>
+    <div id="previewContainer">
+      <p class="empty">Start the agent and perform a scan to see the redacted screenshot here.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>📋 Agent Activity Log</h3>
+    <div id="activityLog">
+      <div class="log-entry log-info">Agent initialized. Waiting for activation...</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>🔍 Detected & Redacted Items</h3>
+    <div id="redactionList">
+      <p class="empty">No items scanned yet.</p>
+    </div>
+  </div>
+
+  <script>
+    // Listen for updates from background worker
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.type === "SCAN_COMPLETE") {
+        updatePreview(message.data);
+      }
+      if (message.type === "LOG_ENTRY") {
+        addLogEntry(message.text, message.logType);
+      }
+    });
+
+    function updatePreview(scanData) {
+      const container = document.getElementById("previewContainer");
+      if (scanData?.screenshot) {
+        container.innerHTML = `<img id="redactionPreview" src="${scanData.screenshot}" alt="Redacted Screenshot" />`;
+      }
+
+      const list = document.getElementById("redactionList");
+      const summary = scanData?.privacySummary;
+      if (summary) {
+        let html = "";
+        const piiDetections = summary.piiDetections || [];
+        const piiTypes = [...new Set(piiDetections.map(d => d.label || d.type))];
+
+        if (piiTypes.length > 0) {
+          html += piiTypes.map(t => `<div class="log-entry log-pii">🔴 ${t} — REDACTED</div>`).join("");
+        }
+
+        const maskedCount = summary.maskedVisualElements || 0;
+        if (maskedCount > 0) {
+          html += `<div class="log-entry log-pii">🟡 ${maskedCount} visual elements — MASKED</div>`;
+        }
+
+        if (html === "") {
+          html = `<div class="log-entry log-safe">✅ No sensitive data found on this page</div>`;
+        }
+        list.innerHTML = html;
+      }
+    }
+
+    function addLogEntry(text, type = "info") {
+      const log = document.getElementById("activityLog");
+      const entry = document.createElement("div");
+      entry.className = `log-entry log-${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+      log.prepend(entry);
+      // Keep only last 50 entries
+      while (log.children.length > 50) {
+        log.removeChild(log.lastChild);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ananya Vision Agent</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 380px;
+      min-height: 480px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0a0a1a;
+      color: #e0e0f0;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1a1a3e, #0d0d2b);
+      padding: 20px;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #E5E7EB;
+      margin-bottom: 4px;
+    }
+    .header .subtitle {
+      font-size: 11px;
+      color: #8888aa;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: rgba(20, 20, 40, 0.8);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #555;
+      transition: background 0.3s;
+    }
+    .status-dot.active { background: #22c55e; }
+    .status-dot.connecting { background: #eab308; }
+    .status-dot.error { background: #ef4444; }
+    .status-text { font-size: 13px; flex: 1; }
+
+    /* Controls */
+    .controls {
+      padding: 16px 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-start {
+      background: #16a34a;
+      color: white;
+    }
+    .btn-start:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .btn-stop {
+      background: #dc2626;
+      color: white;
+    }
+    .btn-stop:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .btn-scan {
+      background: #6366f1;
+      color: white;
+    }
+    .btn-scan:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Privacy Dashboard */
+    .dashboard {
+      padding: 16px 20px;
+    }
+    .dashboard h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #8888aa;
+      margin-bottom: 12px;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .metric-card {
+      background: rgba(25, 25, 55, 0.8);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .metric-card:hover { border-color: rgba(99, 102, 241, 0.4); }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #E5E7EB;
+    }
+    .metric-value.warning {
+      color: #f59e0b;
+    }
+    .metric-value.safe {
+      color: #22c55e;
+    }
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8888aa;
+      margin-top: 4px;
+    }
+
+    /* PII Type Tags */
+    .pii-tags {
+      padding: 0 20px 16px;
+    }
+    .pii-tags h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #8888aa;
+      margin-bottom: 8px;
+    }
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag-pii {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .tag-field {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .tag-safe {
+      background: rgba(34, 197, 94, 0.15);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .no-data {
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
+    }
+
+    /* Settings */
+    .settings {
+      padding: 12px 20px;
+      border-top: 1px solid rgba(99, 102, 241, 0.1);
+    }
+    .settings label {
+      font-size: 11px;
+      color: #8888aa;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .settings input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      background: rgba(15, 15, 35, 0.8);
+      color: #e0e0f0;
+      font-size: 12px;
+      font-family: 'Cascadia Code', monospace;
+    }
+    .settings input:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 10px;
+      color: #555;
+      border-top: 1px solid rgba(99, 102, 241, 0.05);
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🛡️ Ananya Vision Agent</h1>
+    <div class="subtitle">Privacy-Preserving Browser AI</div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-dot" id="statusDot"></div>
+    <span class="status-text" id="statusText">Inactive</span>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-start" id="btnStart">▶ Start</button>
+    <button class="btn btn-stop" id="btnStop" disabled>⏹ Stop</button>
+    <button class="btn btn-scan" id="btnScan">🔍 Scan</button>
+  </div>
+
+  <div class="settings" style="margin-top: 5px; text-align: center; border-top: none; padding-top: 0;">
+    <button class="btn" id="btnTargetTab" style="background: #d97706; color: white; width: 100%;">🎯 USE THIS TAB</button>
+    <div id="targetTabDisplay" style="margin-top: 8px; font-size: 11px; color: #8888aa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">No target tab selected</div>
+  </div>
+
+  <div class="dashboard">
+    <h3>🔒 Privacy Shield Status</h3>
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-value" id="piiCount">0</div>
+        <div class="metric-label">PII Detected</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="fieldCount">0</div>
+        <div class="metric-label">Sensitive Fields</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value safe" id="redactedCount">0</div>
+        <div class="metric-label">Items Redacted</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="scanTime">0ms</div>
+        <div class="metric-label">Scan Latency</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pii-tags">
+    <h3>Detected PII Types</h3>
+    <div class="tags-container" id="piiTags">
+      <span class="no-data">No scan performed yet</span>
+    </div>
+  </div>
+
+  <div class="settings">
+    <label for="serverUrlInput">Server URL</label>
+    <input type="text" id="serverUrlInput" value="ws://localhost:3000/agent" />
+  </div>
+
+  <div class="footer">
+    Ananya Privacy Vision Agent v1.0 — All data sanitized locally before transmission
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
